@@ -1,5 +1,6 @@
 const { app, BrowserWindow, globalShortcut } = require('electron');
 const { registerPushToTalk } = require('../hotkeys/pushToTalk');
+const { createIndicatorWindow } = require('./indicator');
 const { logger } = require('../utils/logger');
 
 let mainWindow;
@@ -25,6 +26,7 @@ function createWindow() {
 app.whenReady().then(() => {
   logger('Electron app started');
   createWindow();
+  createIndicatorWindow();
   registerPushToTalk();
 
   app.on('activate', () => {
