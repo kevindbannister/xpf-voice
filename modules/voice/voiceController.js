@@ -21,6 +21,7 @@ async function start() {
       return '';
     }
 
+    logger('Dispatching transcription pipeline');
     return transcriptionController.transcribe(audioFile, selectedText);
   });
 
