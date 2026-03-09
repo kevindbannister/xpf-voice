@@ -1,9 +1,10 @@
 const PREFIX = '[XPROFLOW VOICE]';
 
-function log(message) {
+function logger(message) {
   console.log(`${PREFIX} ${message}`);
 }
 
 module.exports = {
-  log,
+  logger,
+  log: logger,
 };
