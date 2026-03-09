@@ -13,7 +13,6 @@ function runWhisper(audioFile) {
       '-m', DEFAULT_WHISPER_MODEL,
       '-f', audioFile,
       '--threads', '8',
-      '--no-timestamps',
     ]);
 
     whisperProcess.stderr.on('data', (chunk) => {
