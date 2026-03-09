@@ -18,16 +18,29 @@
       }
 
       .indicator {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.75);
         color: white;
-        border-radius: 10px;
-        padding: 10px 14px;
-        font-size: 16px;
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 14px;
         user-select: none;
+        min-width: 140px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
-    <div class="indicator">🎙 Recording...</div>
+    <div class="indicator">
+      <div id="indicator-text">🎙 Recording...</div>
+    </div>
+
+    <script>
+      window.setIndicatorState = (text) => {
+        const indicatorText = document.getElementById('indicator-text');
+        if (indicatorText) {
+          indicatorText.textContent = text;
+        }
+      };
+    </script>
   </body>
 </html>

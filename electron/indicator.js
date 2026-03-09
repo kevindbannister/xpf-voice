@@ -4,6 +4,12 @@ const { logger } = require('../utils/logger');
 
 let indicatorWindow;
 
+const INDICATOR_STATES = {
+  recording: '🎙 Recording...',
+  processing: '⚙ Processing...',
+  done: '✓ Done',
+};
+
 function createIndicatorWindow() {
   if (indicatorWindow && !indicatorWindow.isDestroyed()) {
     return indicatorWindow;
@@ -43,6 +49,23 @@ function createIndicatorWindow() {
   return indicatorWindow;
 }
 
+function setIndicatorState(state) {
+  const window = createIndicatorWindow();
+  const message = INDICATOR_STATES[state] || INDICATOR_STATES.recording;
+
+  const applyState = () => {
+    window.webContents.executeJavaScript(`window.setIndicatorState(${JSON.stringify(message)});`, true);
+  };
+
+  if (window.webContents.isLoading()) {
+    window.webContents.once('did-finish-load', applyState);
+  } else {
+    applyState();
+  }
+
+  logger(`[XPROFLOW VOICE] Indicator state: ${state}`);
+}
+
 function showIndicator() {
   const window = createIndicatorWindow();
   window.showInactive();
@@ -62,4 +85,5 @@ module.exports = {
   createIndicatorWindow,
   showIndicator,
   hideIndicator,
+  setIndicatorState,
 };
