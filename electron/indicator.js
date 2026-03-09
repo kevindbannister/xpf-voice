@@ -63,13 +63,13 @@ function setIndicatorState(state) {
     applyState();
   }
 
-  logger(`[XPROFLOW VOICE] Indicator state: ${state}`);
+  logger(`Indicator state: ${state}`);
 }
 
 function showIndicator() {
   const window = createIndicatorWindow();
   window.showInactive();
-  logger('[XPROFLOW VOICE] Recording indicator shown');
+  logger('Recording indicator shown');
 }
 
 function hideIndicator() {
@@ -78,7 +78,7 @@ function hideIndicator() {
   }
 
   indicatorWindow.hide();
-  logger('[XPROFLOW VOICE] Recording indicator hidden');
+  logger('Recording indicator hidden');
 }
 
 module.exports = {

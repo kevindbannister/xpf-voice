@@ -33,7 +33,6 @@ function startRecording() {
 function stopRecording() {
   if (!recordingProcess) {
     logger('Recording is not in progress');
-    hideIndicator();
     return;
   }
 
@@ -45,15 +44,13 @@ function stopRecording() {
       logger('Recording stopped');
       logger(`Recording saved: ${OUTPUT_FILE}`);
       setIndicatorState('processing');
-      logger('Uploading audio to API');
       const text = await sendVoice(OUTPUT_FILE);
-      logger('API response received');
       await pasteText(text);
       logger('Text pasted into active app');
       setIndicatorState('done');
       setTimeout(() => {
         hideIndicator();
-      }, 700);
+      }, 800);
     } catch (error) {
       logger(`Error while processing recording: ${error instanceof Error ? error.message : String(error)}`);
       hideIndicator();
