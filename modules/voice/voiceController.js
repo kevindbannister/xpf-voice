@@ -2,6 +2,7 @@ const recorder = require('./recorder');
 const voiceState = require('./voiceState');
 const { createIndicatorWindow } = require('./indicator');
 const { captureSelectedText } = require('./selectionCapture');
+const transcriptionController = require('./transcription/transcriptionController');
 const { logger } = require('../../utils/logger');
 
 const MAX_SELECTED_TEXT_LENGTH = 5000;
@@ -9,6 +10,8 @@ let currentSelectionText = '';
 
 async function start() {
   createIndicatorWindow();
+
+  recorder.setTranscribeHandler(transcriptionController.transcribe);
 
   try {
     const capturedText = await captureSelectedText();

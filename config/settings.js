@@ -8,6 +8,7 @@ const DEFAULT_SETTINGS = {
   autoPaste: true,
   silenceAutoStop: false,
   showIndicator: true,
+  transcriptionMode: 'cloud',
 };
 
 function ensureSettingsFile() {
