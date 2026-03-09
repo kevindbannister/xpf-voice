@@ -56,6 +56,7 @@
         align-items: center;
         gap: 10px;
         color: #27272a;
+        text-decoration: none;
       }
 
       .nav-icon {
@@ -68,6 +69,12 @@
       .nav-item.active {
         background: #ddddda;
         font-weight: 700;
+      }
+
+      .card[id],
+      .hero[id],
+      .settings-map[id] {
+        scroll-margin-top: 20px;
       }
 
       .sidebar-spacer {
@@ -176,41 +183,41 @@
     <div class="window">
       <aside class="sidebar">
         <div class="brand">Flow</div>
-        <button class="nav-item active"><span class="nav-icon">⌂</span>Home</button>
-        <button class="nav-item"><span class="nav-icon">📖</span>Dictionary</button>
-        <button class="nav-item"><span class="nav-icon">✂️</span>Snippets</button>
-        <button class="nav-item"><span class="nav-icon">𝑻</span>Style</button>
+        <a class="nav-item active" href="#home"><span class="nav-icon">⌂</span>Home</a>
+        <a class="nav-item" href="#dictionary"><span class="nav-icon">📖</span>Dictionary</a>
+        <a class="nav-item" href="#snippets"><span class="nav-icon">✂️</span>Snippets</a>
+        <a class="nav-item" href="#style"><span class="nav-icon">𝑻</span>Style</a>
 
         <div class="sidebar-spacer"></div>
 
-        <button class="nav-item"><span class="nav-icon">⚙️</span>Settings</button>
+        <a class="nav-item" href="#settings"><span class="nav-icon">⚙️</span>Settings</a>
       </aside>
 
       <main class="content">
         <div class="banner">Loaded from bundled local <code>index.html</code>.</div>
 
-        <section class="hero">
+        <section class="hero" id="home">
           <h1>Main UI Settings Map</h1>
           <p>
             This dashboard now clearly exposes each settings section so we can adapt behavior quickly and mirror the target layout.
           </p>
         </section>
 
-        <h2 class="section-title">Settings sections to adapt</h2>
-        <section class="grid">
-          <article class="card">
-            <h3>Voice Engine</h3>
-            <p>Configure wake phrase, punctuation, and confidence strategy.</p>
+        <h2 class="section-title" id="settings">Settings sections to adapt</h2>
+        <section class="grid settings-map">
+          <article class="card" id="style">
+            <h3>Style</h3>
+            <p>Set tone, punctuation style, and voice formatting defaults.</p>
             <button>Open Voice Settings</button>
           </article>
 
-          <article class="card">
+          <article class="card" id="dictionary">
             <h3>Dictionary Rules</h3>
             <p>Define replacements for names, acronyms, and custom terms.</p>
             <button>Open Dictionary</button>
           </article>
 
-          <article class="card">
+          <article class="card" id="snippets">
             <h3>Snippet Commands</h3>
             <p>Create reusable templates for repetitive responses.</p>
             <button>Open Snippets</button>
