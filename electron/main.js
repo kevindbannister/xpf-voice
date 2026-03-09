@@ -6,6 +6,7 @@ const { createTray } = require('./menuBar');
 const { createSettingsWindow } = require('./settingsWindow');
 const { getSettings } = require('../config/settings');
 const { logger } = require('../utils/logger');
+const whisperService = require('../modules/voice/transcription/whisperService');
 
 let mainWindow;
 
@@ -37,7 +38,11 @@ function restartEngine() {
 
 app.whenReady().then(() => {
   logger('Electron app started');
-  getSettings();
+  const settings = getSettings();
+
+  if (settings.transcriptionMode === 'local') {
+    whisperService.startWhisper();
+  }
   createWindow();
   createIndicatorWindow();
   registerPushToTalk();
