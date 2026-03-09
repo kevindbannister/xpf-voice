@@ -2,30 +2,37 @@ const { globalShortcut } = require('electron');
 const { startRecording, stopRecording } = require('../audio/recorder');
 const { logger } = require('../utils/logger');
 
-const PUSH_TO_TALK_KEY = 'Function+Control';
+const PUSH_TO_TALK_KEY = 'Control+Space';
 let isRecording = false;
 
 function registerPushToTalk() {
-  const registered = globalShortcut.register(PUSH_TO_TALK_KEY, () => {
-    logger('[XPROFLOW VOICE] Push-to-talk hotkey triggered');
+  try {
+    const registered = globalShortcut.register(PUSH_TO_TALK_KEY, () => {
+      logger('[XPROFLOW VOICE] Push-to-talk activated');
 
-    if (!isRecording) {
-      startRecording();
-      isRecording = true;
-      return;
+      if (!isRecording) {
+        startRecording();
+        isRecording = true;
+        logger('[XPROFLOW VOICE] Recording started');
+        return;
+      }
+
+      stopRecording();
+      isRecording = false;
+      logger('[XPROFLOW VOICE] Recording stopped');
+    });
+
+    if (!registered) {
+      logger(`Failed to register push-to-talk hotkey: ${PUSH_TO_TALK_KEY}`);
+      return false;
     }
 
-    stopRecording();
-    isRecording = false;
-  });
-
-  if (!registered) {
-    logger(`Failed to register push-to-talk hotkey: ${PUSH_TO_TALK_KEY}`);
+    logger(`Push-to-talk hotkey registered: ${PUSH_TO_TALK_KEY}`);
+    return true;
+  } catch (error) {
+    logger(`Error registering push-to-talk hotkey: ${error instanceof Error ? error.message : String(error)}`);
     return false;
   }
-
-  logger(`Push-to-talk hotkey registered: ${PUSH_TO_TALK_KEY}`);
-  return true;
 }
 
 module.exports = {
