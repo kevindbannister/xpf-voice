@@ -30,6 +30,13 @@
         width: 100%;
         padding: 6px;
       }
+      .radio-group label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 400;
+        margin-bottom: 6px;
+      }
     </style>
   </head>
   <body>
@@ -49,6 +56,20 @@
         <option value="paste">Paste automatically</option>
         <option value="copy">Copy to clipboard only</option>
       </select>
+    </div>
+
+    <div class="setting">
+      <label>Transcription Mode</label>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="transcriptionMode" value="cloud" />
+          Cloud (default)
+        </label>
+        <label>
+          <input type="radio" name="transcriptionMode" value="local" />
+          Local
+        </label>
+      </div>
     </div>
 
     <div class="setting">
@@ -77,21 +98,27 @@
         silenceAutoStop: document.getElementById('silenceAutoStop'),
       };
 
+      const transcriptionModeRadios = document.querySelectorAll('input[name="transcriptionMode"]');
+
       function toFormValues(settings) {
         return {
           recordMode: settings.recordMode || 'toggle',
           clipboardBehavior: settings.autoPaste ? 'paste' : 'copy',
           showIndicator: Boolean(settings.showIndicator),
           silenceAutoStop: settings.silenceAutoStop === false ? 'disabled' : String(settings.silenceAutoStop),
+          transcriptionMode: settings.transcriptionMode || 'cloud',
         };
       }
 
       function toSettingsPayload() {
+        const selectedMode = Array.from(transcriptionModeRadios).find((radio) => radio.checked);
+
         return {
           recordMode: controls.recordMode.value,
           autoPaste: controls.clipboardBehavior.value === 'paste',
           showIndicator: controls.showIndicator.checked,
           silenceAutoStop: controls.silenceAutoStop.value === 'disabled' ? false : Number(controls.silenceAutoStop.value),
+          transcriptionMode: selectedMode ? selectedMode.value : 'cloud',
         };
       }
 
@@ -100,6 +127,10 @@
         controls.clipboardBehavior.value = values.clipboardBehavior;
         controls.showIndicator.checked = values.showIndicator;
         controls.silenceAutoStop.value = values.silenceAutoStop;
+
+        transcriptionModeRadios.forEach((radio) => {
+          radio.checked = radio.value === values.transcriptionMode;
+        });
       }
 
       async function save() {
@@ -113,6 +144,10 @@
         Object.values(controls).forEach((control) => {
           const eventName = control.type === 'checkbox' ? 'change' : 'input';
           control.addEventListener(eventName, save);
+        });
+
+        transcriptionModeRadios.forEach((radio) => {
+          radio.addEventListener('change', save);
         });
       }
 

@@ -1,7 +1,6 @@
 const fs = require('fs');
 const record = require('node-record-lpcm16');
 const { logger } = require('../../utils/logger');
-const { sendVoice } = require('../../api/client');
 const { pasteText } = require('../../utils/paste');
 const { getSettings } = require('../../config/settings');
 const voiceState = require('./voiceState');
@@ -11,9 +10,14 @@ const OUTPUT_FILE = '/tmp/xproflow-voice.wav';
 let recordingProcess = null;
 let outputStream = null;
 let currentSelectionText = '';
+let transcribeHandler = null;
 
 function setSelectedText(selectedText) {
   currentSelectionText = selectedText || '';
+}
+
+function setTranscribeHandler(handler) {
+  transcribeHandler = handler;
 }
 
 function startRecording() {
@@ -47,12 +51,18 @@ function stopRecording() {
 
   const finalizeRecording = async () => {
     try {
+      if (!transcribeHandler) {
+        throw new Error('No transcription handler configured');
+      }
+
       logger('Recording stopped');
       logger(`Recording saved: ${OUTPUT_FILE}`);
-      logger('Sending selected text with voice request');
-      const text = await sendVoice(OUTPUT_FILE, currentSelectionText);
+      logger('Processing transcription request');
+
+      const text = await transcribeHandler(OUTPUT_FILE, currentSelectionText);
       const settings = getSettings();
       await pasteText(text, { autoPaste: Boolean(settings.autoPaste) });
+
       logger(settings.autoPaste ? 'Text pasted into active app' : 'Clipboard updated without auto-paste');
       voiceState.setState('idle');
       currentSelectionText = '';
@@ -78,4 +88,5 @@ module.exports = {
   startRecording,
   stopRecording,
   setSelectedText,
+  setTranscribeHandler,
 };

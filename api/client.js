@@ -25,6 +25,26 @@ async function sendVoice(filePath, selectedText = '') {
   }
 }
 
+async function sendTranscript(transcript, selectedText = '') {
+  try {
+    logger('Uploading local transcript to n8n');
+
+    const response = await axios.post('https://n8n.xproflow.com/webhook/voice-cleanup-only-voice', {
+      transcript,
+      selectedText: selectedText || '',
+      source: 'desktop-local',
+    });
+
+    logger('n8n transcript response received');
+
+    return response.data;
+  } catch (error) {
+    logger(`Failed to upload transcript: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
 module.exports = {
   sendVoice,
+  sendTranscript,
 };
