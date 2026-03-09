@@ -1,13 +1,14 @@
 const path = require('path');
 const { BrowserWindow, screen } = require('electron');
 const { logger } = require('../utils/logger');
+const { getSettings } = require('../config/settings');
+const voiceState = require('../core/voiceState');
 
 let indicatorWindow;
 
 const INDICATOR_STATES = {
   recording: '🎙 Recording...',
   processing: '⚙ Processing...',
-  done: '✓ Done',
 };
 
 function createIndicatorWindow() {
@@ -80,6 +81,30 @@ function hideIndicator() {
   indicatorWindow.hide();
   logger('Recording indicator hidden');
 }
+
+voiceState.on('change', (state) => {
+  const settings = getSettings();
+  const shouldShowIndicator = Boolean(settings.showIndicator);
+
+  if (!shouldShowIndicator) {
+    hideIndicator();
+    return;
+  }
+
+  if (state === 'recording') {
+    setIndicatorState('recording');
+    showIndicator();
+    return;
+  }
+
+  if (state === 'processing') {
+    setIndicatorState('processing');
+    showIndicator();
+    return;
+  }
+
+  hideIndicator();
+});
 
 module.exports = {
   createIndicatorWindow,
