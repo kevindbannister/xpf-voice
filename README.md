@@ -8,7 +8,7 @@ The app currently:
 
 - launches Electron
 - runs as a minimal hidden background app
-- registers the global push-to-talk hotkey (`§`)
+- registers the global push-to-talk hotkey (`Control+Space`)
 - logs start/stop voice events to the console
 
 ## Install dependencies
