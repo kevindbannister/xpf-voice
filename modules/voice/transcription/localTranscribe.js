@@ -3,20 +3,25 @@ const path = require('path');
 const { sendTranscript } = require('../../../api/client');
 const { logger } = require('../../../utils/logger');
 
-const DEFAULT_WHISPER_MODEL = process.env.WHISPER_MODEL_PATH || 'models/base.en.bin';
-
 function runWhisper(audioFile) {
   return new Promise((resolve, reject) => {
-    let output = '';
+    let stdout = '';
+    let stderr = '';
 
     const whisperProcess = spawn('/opt/homebrew/bin/whisper-cli', [
-      '-m', DEFAULT_WHISPER_MODEL,
+      '-m', 'models/base.en.bin',
       '-f', audioFile,
       '--threads', '8',
+      '--no-timestamps',
+      '--language', 'en',
     ]);
 
+    whisperProcess.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+    });
+
     whisperProcess.stderr.on('data', (chunk) => {
-      output += chunk.toString();
+      stderr += chunk.toString();
     });
 
     whisperProcess.on('error', (error) => {
@@ -25,22 +30,20 @@ function runWhisper(audioFile) {
 
     whisperProcess.on('close', (code) => {
       if (code !== 0) {
-        reject(new Error(`whisper-cli exited with code ${code}: ${output || 'unknown error'}`));
+        reject(new Error(`whisper-cli exited with code ${code}: ${stderr || 'unknown error'}`));
         return;
       }
 
-      console.log('[XPROFLOW VOICE] Raw whisper output:');
-      console.log(output);
+      console.log('[XPROFLOW VOICE] Whisper stdout:');
+      console.log(stdout);
 
-      const lines = output.split('\n');
+      const transcript = stdout
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0)
+        .pop();
 
-      const transcript = lines
-        .filter((line) => line.includes(']'))
-        .map((line) => line.split(']').pop().trim())
-        .join(' ')
-        .trim();
-
-      resolve(transcript);
+      resolve(transcript || '');
     });
   });
 }
@@ -78,9 +81,15 @@ function trimSilence(audioFile) {
 }
 
 async function transcribeLocal(audioFile, selectedText = '') {
-  const processedAudioFile = await trimSilence(audioFile);
+  const originalFile = audioFile;
+  const trimmedFile = await trimSilence(audioFile);
+
+  // temporarily disable trimming
+  audioFile = originalFile;
+
+  logger(`Trimmed candidate (bypassed): ${trimmedFile}`);
   logger('Starting local transcription');
-  const transcript = await runWhisper(processedAudioFile);
+  const transcript = await runWhisper(audioFile);
   console.log(`[XPROFLOW VOICE] Transcript: ${transcript}`);
 
   if (!transcript) {
