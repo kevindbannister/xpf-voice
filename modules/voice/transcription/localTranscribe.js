@@ -7,8 +7,7 @@ const DEFAULT_WHISPER_MODEL = process.env.WHISPER_MODEL_PATH || 'models/base.en.
 
 function runWhisper(audioFile) {
   return new Promise((resolve, reject) => {
-    let stdout = '';
-    let stderr = '';
+    let output = '';
 
     const whisperProcess = spawn('/opt/homebrew/bin/whisper-cli', [
       '-m', DEFAULT_WHISPER_MODEL,
@@ -17,12 +16,8 @@ function runWhisper(audioFile) {
       '--no-timestamps',
     ]);
 
-    whisperProcess.stdout.on('data', (chunk) => {
-      stdout += chunk.toString();
-    });
-
     whisperProcess.stderr.on('data', (chunk) => {
-      stderr += chunk.toString();
+      output += chunk.toString();
     });
 
     whisperProcess.on('error', (error) => {
@@ -31,11 +26,22 @@ function runWhisper(audioFile) {
 
     whisperProcess.on('close', (code) => {
       if (code !== 0) {
-        reject(new Error(`whisper-cli exited with code ${code}: ${stderr || 'unknown error'}`));
+        reject(new Error(`whisper-cli exited with code ${code}: ${output || 'unknown error'}`));
         return;
       }
 
-      resolve(stdout.trim());
+      console.log('[XPROFLOW VOICE] Raw whisper output:');
+      console.log(output);
+
+      const lines = output.split('\n');
+
+      const transcript = lines
+        .filter((line) => line.includes(']'))
+        .map((line) => line.split(']').pop().trim())
+        .join(' ')
+        .trim();
+
+      resolve(transcript);
     });
   });
 }
@@ -76,6 +82,7 @@ async function transcribeLocal(audioFile, selectedText = '') {
   const processedAudioFile = await trimSilence(audioFile);
   logger('Starting local transcription');
   const transcript = await runWhisper(processedAudioFile);
+  console.log(`[XPROFLOW VOICE] Transcript: ${transcript}`);
 
   if (!transcript) {
     throw new Error('Local transcription produced an empty transcript');
