@@ -4,7 +4,9 @@
   "description": "XProFlow Voice Companion desktop app skeleton",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "concurrently \"vite\" \"electron .\"",
+    "vite": "vite",
+    "electron": "electron .",
+    "dev": "concurrently \"npm run vite\" \"npm run electron\"",
     "start": "electron .",
     "build": "electron-builder"
   },
@@ -19,6 +21,8 @@
     "lucide-react": "^0.462.0"
   },
   "devDependencies": {
-    "concurrently": "^9.0.1"
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.0.1",
+    "vite": "^5.4.10"
   }
 }
