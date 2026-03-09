@@ -1,6 +1,7 @@
 const fs = require('fs');
 const record = require('node-record-lpcm16');
 const { logger } = require('../utils/logger');
+const { showIndicator, hideIndicator } = require('../electron/indicator');
 
 const OUTPUT_FILE = '/tmp/xproflow-voice.wav';
 
@@ -22,6 +23,7 @@ function startRecording() {
   });
 
   recordingProcess.stream().pipe(outputStream);
+  showIndicator();
   logger('Recording started');
 }
 
@@ -33,6 +35,7 @@ function stopRecording() {
 
   recordingProcess.stop();
   recordingProcess = null;
+  hideIndicator();
 
   if (outputStream) {
     outputStream.end(() => {
