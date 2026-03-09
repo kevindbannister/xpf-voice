@@ -8,18 +8,18 @@ let isRecording = false;
 function registerPushToTalk() {
   try {
     const registered = globalShortcut.register(PUSH_TO_TALK_KEY, () => {
-      logger('[XPROFLOW VOICE] Push-to-talk activated');
+      logger('Push-to-talk activated');
 
       if (!isRecording) {
         startRecording();
         isRecording = true;
-        logger('[XPROFLOW VOICE] Recording started');
+        logger('Recording started');
         return;
       }
 
       stopRecording();
       isRecording = false;
-      logger('[XPROFLOW VOICE] Recording stopped');
+      logger('Recording stopped');
     });
 
     if (!registered) {

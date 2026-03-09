@@ -8,13 +8,13 @@ async function sendVoice(filePath) {
     const form = new FormData();
     form.append('file', fs.createReadStream(filePath));
 
-    logger('[XPROFLOW VOICE] Uploading audio to n8n');
+    logger('Uploading audio to n8n');
 
     const response = await axios.post('https://n8n.xproflow.com/webhook/voice-cleanup-only-voice', form, {
       headers: form.getHeaders(),
     });
 
-    logger('[XPROFLOW VOICE] n8n response received');
+    logger('n8n response received');
 
     return response.data;
   } catch (error) {
