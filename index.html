@@ -208,30 +208,30 @@
           <article class="card" id="style">
             <h3>Style</h3>
             <p>Set tone, punctuation style, and voice formatting defaults.</p>
-            <button>Open Voice Settings</button>
+            <button id="openVoiceSettings">Open Voice Settings</button>
           </article>
 
           <article class="card" id="dictionary">
             <h3>Dictionary Rules</h3>
             <p>Define replacements for names, acronyms, and custom terms.</p>
-            <button>Open Dictionary</button>
+            <button id="openDictionary">Open Dictionary</button>
           </article>
 
           <article class="card" id="snippets">
             <h3>Snippet Commands</h3>
             <p>Create reusable templates for repetitive responses.</p>
-            <button>Open Snippets</button>
+            <button id="openSnippets">Open Snippets</button>
           </article>
 
-          <article class="card">
+          <article class="card" id="historyCard">
             <h3>History + Audit</h3>
             <p>Review captured transcripts and clear records as needed.</p>
-            <button>Open History</button>
+            <button id="openHistory">Open History</button>
           </article>
         </section>
 
-        <h2 class="section-title">Your transcription history</h2>
-        <section class="history">
+        <h2 class="section-title" id="historyTitle">Your transcription history</h2>
+        <section class="history" id="historyList">
           <div class="history-row">
             <div class="history-time">12:47 PM</div>
             <div class="history-text">Audio is silent.</div>
@@ -247,5 +247,131 @@
         </section>
       </main>
     </div>
+  
+    <script>
+      function navigate(section) {
+        const target = document.getElementById(section);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      function renderDictionary(rules = []) {
+        const dictionaryCard = document.getElementById('dictionary');
+        if (!dictionaryCard) return;
+
+        let list = dictionaryCard.querySelector('.data-list');
+        if (!list) {
+          list = document.createElement('div');
+          list.className = 'data-list';
+          list.style.marginTop = '12px';
+          list.style.fontSize = '13px';
+          dictionaryCard.appendChild(list);
+        }
+
+        list.innerHTML = rules.length
+          ? rules.map((rule) => `<div><strong>${rule.trigger}</strong> → ${rule.replacement || ''}</div>`).join('')
+          : '<div>No dictionary rules configured.</div>';
+      }
+
+      function renderSnippets(snippets = []) {
+        const snippetsCard = document.getElementById('snippets');
+        if (!snippetsCard) return;
+
+        let list = snippetsCard.querySelector('.data-list');
+        if (!list) {
+          list = document.createElement('div');
+          list.className = 'data-list';
+          list.style.marginTop = '12px';
+          list.style.fontSize = '13px';
+          snippetsCard.appendChild(list);
+        }
+
+        list.innerHTML = snippets.length
+          ? snippets.map((snippet) => `<div><strong>${snippet.trigger}</strong> → ${snippet.output || ''}</div>`).join('')
+          : '<div>No snippets configured.</div>';
+      }
+
+      function renderHistory(historyEntries = []) {
+        const historyList = document.getElementById('historyList');
+        if (!historyList) return;
+
+        historyList.innerHTML = historyEntries.length
+          ? historyEntries
+              .map((entry) => {
+                const time = new Date(entry.createdAt || Date.now()).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                });
+                return `<div class="history-row"><div class="history-time">${time}</div><div class="history-text">${entry.finalText || entry.rawTranscript || '(empty entry)'}</div></div>`;
+              })
+              .join('')
+          : '<div class="history-row"><div class="history-time">--</div><div class="history-text">No transcription history yet.</div></div>';
+      }
+
+      function renderSettings(settings) {
+        const settingsCard = document.getElementById('style');
+        if (!settingsCard) return;
+
+        let details = settingsCard.querySelector('.settings-preview');
+        if (!details) {
+          details = document.createElement('div');
+          details.className = 'settings-preview';
+          details.style.marginTop = '12px';
+          details.style.fontSize = '13px';
+          settingsCard.appendChild(details);
+        }
+
+        details.innerHTML = `Mode: <strong>${settings.transcriptionMode}</strong> · Auto Paste: <strong>${settings.autoPaste}</strong>`;
+      }
+
+      async function loadDictionary() {
+        const rules = await window.xpf.getDictionary();
+        renderDictionary(rules);
+      }
+
+      async function loadSnippets() {
+        const snippets = await window.xpf.getSnippets();
+        renderSnippets(snippets);
+      }
+
+      async function loadHistory() {
+        const history = await window.xpf.getHistory();
+        renderHistory(history);
+      }
+
+      async function loadSettings() {
+        const settings = await window.xpf.getSettings();
+        renderSettings(settings);
+      }
+
+      document.getElementById('openDictionary').onclick = async () => {
+        navigate('dictionary');
+        await loadDictionary();
+      };
+
+      document.getElementById('openSnippets').onclick = async () => {
+        navigate('snippets');
+        await loadSnippets();
+      };
+
+      document.getElementById('openHistory').onclick = async () => {
+        navigate('historyTitle');
+        await loadHistory();
+      };
+
+      document.getElementById('openVoiceSettings').onclick = async () => {
+        navigate('settings');
+        const current = await window.xpf.getSettings();
+        const updated = await window.xpf.updateSettings({
+          ...current,
+          smartFormatting: !current.smartFormatting,
+        });
+        renderSettings(updated || current);
+      };
+
+      loadSettings();
+    </script>
+
   </body>
 </html>

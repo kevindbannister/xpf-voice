@@ -6,6 +6,7 @@ const { createTray } = require('./menuBar');
 const { createSettingsWindow } = require('./settingsWindow');
 const { createMainWindow } = require('./windows/mainWindow');
 const { logger } = require('../utils/logger');
+require('./ipc/dataHandlers');
 
 let mainWindow;
 
