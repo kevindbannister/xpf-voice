@@ -13,7 +13,7 @@ function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 900,
     height: 700,
-    title: 'XProFlow Voice',
+    title: 'XProFlow Voice Dashboard',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
