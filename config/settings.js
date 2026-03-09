@@ -8,7 +8,14 @@ const DEFAULT_SETTINGS = {
   autoPaste: true,
   silenceAutoStop: false,
   showIndicator: true,
-  transcriptionMode: 'cloud',
+  transcriptionMode: 'local',
+  smartFormatting: true,
+  soundEffects: true,
+  launchOnLogin: false,
+  showInMenuBar: true,
+  showInDock: false,
+  language: 'en',
+  microphone: 'default',
 };
 
 function ensureSettingsFile() {
