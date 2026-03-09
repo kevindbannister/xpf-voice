@@ -1,13 +1,12 @@
 import React from "react";
-import TopBar from "../components/layout/TopBar";
 import Card from "../components/ui/Card";
 
 export default function Style() {
   return (
-    <div>
-      <TopBar title="Style" subtitle="Configure writing style and formatting defaults." />
-      <Card>
-        <p style={{ margin: 0 }}>Style presets will appear here for tone, punctuation, and formatting preferences.</p>
+    <div className="page-frame">
+      <h2>Style</h2>
+      <Card style={{ padding: 18 }}>
+        <p className="muted">Tune tone, punctuation, and formatting for your generated writing style.</p>
       </Card>
     </div>
   );
