@@ -6,52 +6,239 @@
     <title>XProFlow Voice Dashboard</title>
     <style>
       :root {
-        color-scheme: dark;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #1f2937;
+        background: #0b0b0d;
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       body {
         margin: 0;
-        background: #111827;
-        color: #e5e7eb;
+        padding: 24px;
       }
 
-      .app {
-        min-height: 100vh;
+      .window {
+        background: #f4f4f5;
+        border: 1px solid #d4d4d8;
+        border-radius: 18px;
+        min-height: calc(100vh - 48px);
         display: grid;
-        place-items: center;
-        padding: 24px;
-        box-sizing: border-box;
+        grid-template-columns: 240px 1fr;
+        overflow: hidden;
       }
 
-      .panel {
-        width: min(720px, 100%);
-        background: #1f2937;
-        border: 1px solid #374151;
-        border-radius: 12px;
-        padding: 24px;
-        box-sizing: border-box;
+      .sidebar {
+        background: #ececeb;
+        border-right: 1px solid #dddddd;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
 
-      h1 {
+      .brand {
+        font-size: 30px;
+        font-weight: 800;
+        margin: 10px 0 14px;
+      }
+
+      .nav-item {
+        border: 0;
+        background: transparent;
+        text-align: left;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #27272a;
+      }
+
+      .nav-icon {
+        width: 20px;
+        display: inline-flex;
+        justify-content: center;
+        opacity: 0.85;
+      }
+
+      .nav-item.active {
+        background: #ddddda;
+        font-weight: 700;
+      }
+
+      .sidebar-spacer {
+        flex: 1;
+      }
+
+      .content {
+        padding: 28px;
+        overflow: auto;
+      }
+
+      .banner {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #eef2ff;
+        border: 1px solid #c7d2fe;
+        color: #3730a3;
+        font-weight: 600;
+      }
+
+      .hero {
+        background: linear-gradient(125deg, #0f172a, #27272a 40%, #78350f);
+        color: #f8fafc;
+        border-radius: 18px;
+        margin-top: 16px;
+        padding: 24px;
+      }
+
+      .hero h1 {
         margin: 0 0 8px;
-        font-size: 24px;
       }
 
-      p {
+      .hero p {
         margin: 0;
-        color: #9ca3af;
+        color: #d4d4d8;
+      }
+
+      .section-title {
+        margin: 24px 0 12px;
+        font-size: 20px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .card,
+      .history {
+        background: white;
+        border: 1px solid #e4e4e7;
+        border-radius: 14px;
+      }
+
+      .card {
+        padding: 14px;
+      }
+
+      .card h3 {
+        margin: 0 0 6px;
+      }
+
+      .card p {
+        margin: 0;
+        color: #52525b;
+        min-height: 44px;
+      }
+
+      .card button {
+        margin-top: 12px;
+        border: 1px solid #d4d4d8;
+        background: #f4f4f5;
+        border-radius: 8px;
+        padding: 8px 12px;
+      }
+
+      .history {
+        margin-top: 10px;
+        overflow: hidden;
+      }
+
+      .history-row {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 14px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #ececf1;
+      }
+
+      .history-row:last-child {
+        border-bottom: 0;
+      }
+
+      .history-time {
+        font-weight: 600;
+        color: #52525b;
+      }
+
+      .history-text {
+        color: #27272a;
       }
     </style>
   </head>
   <body>
-    <main class="app">
-      <section class="panel">
-        <h1>XProFlow Voice Dashboard</h1>
-        <p>
-          The dashboard is now loading from a bundled local <code>index.html</code> so the main UI can open correctly in Electron.
-        </p>
-      </section>
-    </main>
+    <div class="window">
+      <aside class="sidebar">
+        <div class="brand">Flow</div>
+        <button class="nav-item active"><span class="nav-icon">⌂</span>Home</button>
+        <button class="nav-item"><span class="nav-icon">📖</span>Dictionary</button>
+        <button class="nav-item"><span class="nav-icon">✂️</span>Snippets</button>
+        <button class="nav-item"><span class="nav-icon">𝑻</span>Style</button>
+
+        <div class="sidebar-spacer"></div>
+
+        <button class="nav-item"><span class="nav-icon">⚙️</span>Settings</button>
+      </aside>
+
+      <main class="content">
+        <div class="banner">Loaded from bundled local <code>index.html</code>.</div>
+
+        <section class="hero">
+          <h1>Main UI Settings Map</h1>
+          <p>
+            This dashboard now clearly exposes each settings section so we can adapt behavior quickly and mirror the target layout.
+          </p>
+        </section>
+
+        <h2 class="section-title">Settings sections to adapt</h2>
+        <section class="grid">
+          <article class="card">
+            <h3>Voice Engine</h3>
+            <p>Configure wake phrase, punctuation, and confidence strategy.</p>
+            <button>Open Voice Settings</button>
+          </article>
+
+          <article class="card">
+            <h3>Dictionary Rules</h3>
+            <p>Define replacements for names, acronyms, and custom terms.</p>
+            <button>Open Dictionary</button>
+          </article>
+
+          <article class="card">
+            <h3>Snippet Commands</h3>
+            <p>Create reusable templates for repetitive responses.</p>
+            <button>Open Snippets</button>
+          </article>
+
+          <article class="card">
+            <h3>History + Audit</h3>
+            <p>Review captured transcripts and clear records as needed.</p>
+            <button>Open History</button>
+          </article>
+        </section>
+
+        <h2 class="section-title">Your transcription history</h2>
+        <section class="history">
+          <div class="history-row">
+            <div class="history-time">12:47 PM</div>
+            <div class="history-text">Audio is silent.</div>
+          </div>
+          <div class="history-row">
+            <div class="history-time">12:45 PM</div>
+            <div class="history-text">Based on this, should these employees be adjusting their claim to reflect accrued holiday and unpaid bank holiday entries?</div>
+          </div>
+          <div class="history-row">
+            <div class="history-time">12:31 PM</div>
+            <div class="history-text">Could you double check with Sinead that she hasn't had any letters from Insolvency yet before submission?</div>
+          </div>
+        </section>
+      </main>
+    </div>
   </body>
 </html>
