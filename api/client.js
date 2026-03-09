@@ -1,7 +1,18 @@
 const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
+const { getSettings } = require('../config/settings');
 const { logger } = require('../utils/logger');
+
+function getWebhookUrl() {
+  const settings = getSettings();
+
+  if (settings.transcriptionMode === 'local') {
+    return 'https://n8n.xproflow.com/webhook-test/voice-local';
+  }
+
+  return 'https://n8n.xproflow.com/webhook/voice-cleanup-only-voice';
+}
 
 async function sendVoice(filePath, selectedText = '') {
   try {
@@ -10,9 +21,11 @@ async function sendVoice(filePath, selectedText = '') {
     form.append('selectedText', selectedText || '');
     form.append('source', 'desktop');
 
+    const url = getWebhookUrl();
+    console.log('[XPROFLOW VOICE] Using webhook:', url);
     logger('Uploading audio to n8n');
 
-    const response = await axios.post('https://n8n.xproflow.com/webhook/voice-cleanup-only-voice', form, {
+    const response = await axios.post(url, form, {
       headers: form.getHeaders(),
     });
 
@@ -27,9 +40,11 @@ async function sendVoice(filePath, selectedText = '') {
 
 async function sendTranscript(transcript, selectedText = '') {
   try {
+    const url = getWebhookUrl();
+    console.log('[XPROFLOW VOICE] Using webhook:', url);
     logger('Uploading local transcript to n8n');
 
-    const response = await axios.post('https://n8n.xproflow.com/webhook/voice-cleanup-only-voice', {
+    const response = await axios.post(url, {
       transcript,
       selectedText: selectedText || '',
       source: 'desktop-local',
