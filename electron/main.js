@@ -1,7 +1,7 @@
 const { app, BrowserWindow, globalShortcut } = require('electron');
-const recorder = require('../audio/recorder');
+const voiceController = require('../modules/voice/voiceController');
 const { registerPushToTalk } = require('../hotkeys/pushToTalk');
-const { createIndicatorWindow } = require('./indicator');
+const { createIndicatorWindow } = require('../modules/voice/indicator');
 const { createTray } = require('./menuBar');
 const { createSettingsWindow } = require('./settingsWindow');
 const { getSettings } = require('../config/settings');
@@ -30,7 +30,7 @@ function createWindow() {
 function restartEngine() {
   logger('Restarting engine...');
   globalShortcut.unregisterAll();
-  recorder.stopRecording();
+  voiceController.stop();
   registerPushToTalk();
   logger('Engine restarted');
 }
@@ -43,8 +43,8 @@ app.whenReady().then(() => {
   registerPushToTalk();
 
   createTray({
-    onStartRecording: () => recorder.startRecording(),
-    onStopRecording: () => recorder.stopRecording(),
+    onStartRecording: () => voiceController.start(),
+    onStopRecording: () => voiceController.stop(),
     onRestartEngine: () => restartEngine(),
     onSettings: () => createSettingsWindow(),
     onQuit: () => app.quit(),
