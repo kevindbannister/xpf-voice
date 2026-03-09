@@ -1,10 +1,10 @@
 const fs = require('fs');
 const record = require('node-record-lpcm16');
-const { logger } = require('../utils/logger');
-const { sendVoice } = require('../api/client');
-const { pasteText } = require('../utils/paste');
-const { getSettings } = require('../config/settings');
-const voiceState = require('../core/voiceState');
+const { logger } = require('../../utils/logger');
+const { sendVoice } = require('../../api/client');
+const { pasteText } = require('../../utils/paste');
+const { getSettings } = require('../../config/settings');
+const voiceState = require('./voiceState');
 
 const OUTPUT_FILE = '/tmp/xproflow-voice.wav';
 

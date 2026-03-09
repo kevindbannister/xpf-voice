@@ -1,8 +1,8 @@
 const path = require('path');
 const { BrowserWindow, screen } = require('electron');
-const { logger } = require('../utils/logger');
-const { getSettings } = require('../config/settings');
-const voiceState = require('../core/voiceState');
+const { logger } = require('../../utils/logger');
+const { getSettings } = require('../../config/settings');
+const voiceState = require('./voiceState');
 
 let indicatorWindow;
 
@@ -41,7 +41,7 @@ function createIndicatorWindow() {
   });
 
   indicatorWindow.setAlwaysOnTop(true, 'screen-saver');
-  indicatorWindow.loadFile(path.join(__dirname, 'indicator.html'));
+  indicatorWindow.loadFile(path.join(__dirname, '../../electron/indicator.html'));
 
   indicatorWindow.on('closed', () => {
     indicatorWindow = null;

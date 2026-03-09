@@ -1,5 +1,5 @@
 const { globalShortcut } = require('electron');
-const { startRecording, stopRecording } = require('../audio/recorder');
+const voiceController = require('../modules/voice/voiceController');
 const { logger } = require('../utils/logger');
 
 const PUSH_TO_TALK_KEY = 'Control+Space';
@@ -11,12 +11,12 @@ function registerPushToTalk() {
       logger('Push-to-talk activated');
 
       if (!isRecording) {
-        startRecording();
+        voiceController.start();
         isRecording = true;
         return;
       }
 
-      stopRecording();
+      voiceController.stop();
       isRecording = false;
     });
 

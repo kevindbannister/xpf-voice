@@ -1,5 +1,5 @@
 const { Menu, Tray, nativeImage } = require('electron');
-const voiceState = require('../core/voiceState');
+const voiceState = require('../modules/voice/voiceState');
 
 let tray = null;
 let isVoiceStateHooked = false;
