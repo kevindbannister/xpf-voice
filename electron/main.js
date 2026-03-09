@@ -40,6 +40,12 @@ app.whenReady().then(() => {
   createIndicatorWindow();
   registerPushToTalk();
 
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  if (isDevelopment) {
+    logger('Development mode detected, opening settings window');
+    createSettingsWindow();
+  }
+
   createTray({
     onStartRecording: () => voiceController.start(),
     onStopRecording: () => voiceController.stop(),
