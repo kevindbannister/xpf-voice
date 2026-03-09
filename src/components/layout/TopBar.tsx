@@ -1,26 +1,22 @@
 import React from "react";
-import { colors } from "../../theme/colors";
-import { typography } from "../../theme/typography";
+import { Bell, CircleUserRound, Workflow } from "lucide-react";
 
-type TopBarProps = {
-  title: string;
-  subtitle?: string;
-};
-
-export default function TopBar({ title, subtitle }: TopBarProps) {
+export default function TopBar() {
   return (
-    <header style={{ marginBottom: 24 }}>
-      <h1
-        style={{
-          margin: 0,
-          color: colors.text,
-          fontSize: typography.heading.h1,
-          fontWeight: 700,
-        }}
-      >
-        {title}
-      </h1>
-      {subtitle ? <p style={{ margin: "8px 0 0 0", color: colors.mutedText }}>{subtitle}</p> : null}
+    <header className="top-bar">
+      <div className="brand">
+        <Workflow size={24} />
+        Flow
+        <small>Basic</small>
+      </div>
+      <div className="top-icons">
+        <button className="icon-button" type="button" aria-label="Notifications">
+          <Bell size={18} />
+        </button>
+        <button className="icon-button" type="button" aria-label="Profile">
+          <CircleUserRound size={18} />
+        </button>
+      </div>
     </header>
   );
 }

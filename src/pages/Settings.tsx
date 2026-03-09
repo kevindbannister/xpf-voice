@@ -1,15 +1,12 @@
 import React from "react";
-import TopBar from "../components/layout/TopBar";
 import Card from "../components/ui/Card";
-import Button from "../components/ui/Button";
 
 export default function Settings() {
   return (
-    <div>
-      <TopBar title="Settings" subtitle="Adjust global application preferences." />
-      <Card>
-        <p style={{ marginTop: 0 }}>XProFlow Voice desktop settings and integrations are managed here.</p>
-        <Button>Save Preferences</Button>
+    <div className="page-frame">
+      <h2>Settings</h2>
+      <Card style={{ padding: 18 }}>
+        <p className="muted">Manage account, notifications, and desktop application preferences.</p>
       </Card>
     </div>
   );

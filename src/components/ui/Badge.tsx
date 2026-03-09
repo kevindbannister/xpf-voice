@@ -1,24 +1,24 @@
 import React, { ReactNode } from "react";
-import { colors } from "../../theme/colors";
-import { radius } from "../../theme/spacing";
 
 type BadgeProps = {
   children: ReactNode;
+  className?: string;
 };
 
-export default function Badge({ children }: BadgeProps) {
+export default function Badge({ children, className = "" }: BadgeProps) {
   return (
     <span
+      className={className}
       style={{
+        border: "1px solid #E5E7EB",
+        borderRadius: 999,
+        background: "#F3F4F6",
+        padding: "6px 10px",
+        fontSize: 14,
+        fontWeight: 600,
         display: "inline-flex",
         alignItems: "center",
-        background: colors.activeNav,
-        color: colors.primary,
-        border: `1px solid ${colors.border}`,
-        borderRadius: radius.md,
-        padding: "4px 8px",
-        fontSize: 12,
-        fontWeight: 600,
+        gap: 6,
       }}
     >
       {children}
