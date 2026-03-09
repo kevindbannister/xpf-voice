@@ -1,18 +1,21 @@
+const { exec } = require('child_process');
 const { clipboard } = require('electron');
 const { logger } = require('./logger');
 
+const PASTE_COMMAND = "osascript -e 'tell application \"System Events\" to keystroke \"v\" using command down'";
+
 async function pasteText(text) {
   clipboard.writeText(text || '');
+  logger('Clipboard updated');
 
-  try {
-    // Loaded lazily so the app can still run in environments where robotjs is not installed yet.
-    // eslint-disable-next-line global-require
-    const robot = require('robotjs');
-    robot.keyTap('v', 'command');
-  } catch (error) {
-    logger(`Unable to simulate paste: ${error instanceof Error ? error.message : String(error)}`);
-    throw error;
-  }
+  exec(PASTE_COMMAND, (error) => {
+    if (error) {
+      logger(`Unable to simulate paste: ${error instanceof Error ? error.message : String(error)}`);
+      return;
+    }
+
+    logger('Paste command executed');
+  });
 }
 
 module.exports = {
