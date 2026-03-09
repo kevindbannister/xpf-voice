@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { colors } from "../../theme/colors";
-import { shadows } from "../../theme/shadows";
+import { radius, shadows } from "../../theme/spacing";
 
 type CardProps = {
   title?: string;
@@ -14,7 +14,7 @@ export default function Card({ title, children, style }: CardProps) {
       style={{
         background: colors.card,
         border: `1px solid ${colors.border}`,
-        borderRadius: 12,
+        borderRadius: radius.md,
         boxShadow: shadows.soft,
         padding: 16,
         ...style,

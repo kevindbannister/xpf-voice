@@ -20,9 +20,7 @@ export default function TopBar({ title, subtitle }: TopBarProps) {
       >
         {title}
       </h1>
-      {subtitle ? (
-        <p style={{ margin: "8px 0 0 0", color: colors.mutedText }}>{subtitle}</p>
-      ) : null}
+      {subtitle ? <p style={{ margin: "8px 0 0 0", color: colors.mutedText }}>{subtitle}</p> : null}
     </header>
   );
 }
