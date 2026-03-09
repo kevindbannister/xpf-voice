@@ -1,6 +1,6 @@
 const { app, BrowserWindow, globalShortcut } = require('electron');
 const { registerPushToTalk } = require('../hotkeys/pushToTalk');
-const { log } = require('../utils/logger');
+const { logger } = require('../utils/logger');
 
 let mainWindow;
 
@@ -23,7 +23,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  log('Electron app started');
+  logger('Electron app started');
   createWindow();
   registerPushToTalk();
 
@@ -36,5 +36,5 @@ app.whenReady().then(() => {
 
 app.on('will-quit', () => {
   globalShortcut.unregisterAll();
-  log('Global shortcuts unregistered');
+  logger('Global shortcuts unregistered');
 });

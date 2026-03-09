@@ -1,25 +1,28 @@
 const { globalShortcut } = require('electron');
-const { log } = require('../utils/logger');
+const { startRecording, stopRecording } = require('../audio/recorder');
+const { logger } = require('../utils/logger');
 
 const PUSH_TO_TALK_KEY = '§';
-let releaseTimer;
+let isRecording = false;
 
 function registerPushToTalk() {
   const registered = globalShortcut.register(PUSH_TO_TALK_KEY, () => {
-    clearTimeout(releaseTimer);
-    log('Voice recording START');
+    if (!isRecording) {
+      startRecording();
+      isRecording = true;
+      return;
+    }
 
-    releaseTimer = setTimeout(() => {
-      log('Voice recording STOP');
-    }, 150);
+    stopRecording();
+    isRecording = false;
   });
 
   if (!registered) {
-    log(`Failed to register push-to-talk hotkey: ${PUSH_TO_TALK_KEY}`);
+    logger(`Failed to register push-to-talk hotkey: ${PUSH_TO_TALK_KEY}`);
     return false;
   }
 
-  log(`Push-to-talk hotkey registered: ${PUSH_TO_TALK_KEY}`);
+  logger(`Push-to-talk hotkey registered: ${PUSH_TO_TALK_KEY}`);
   return true;
 }
 
