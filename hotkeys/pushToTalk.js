@@ -2,11 +2,13 @@ const { globalShortcut } = require('electron');
 const { startRecording, stopRecording } = require('../audio/recorder');
 const { logger } = require('../utils/logger');
 
-const PUSH_TO_TALK_KEY = '§';
+const PUSH_TO_TALK_KEY = 'Function+Control';
 let isRecording = false;
 
 function registerPushToTalk() {
   const registered = globalShortcut.register(PUSH_TO_TALK_KEY, () => {
+    logger('[XPROFLOW VOICE] Push-to-talk hotkey triggered');
+
     if (!isRecording) {
       startRecording();
       isRecording = true;
