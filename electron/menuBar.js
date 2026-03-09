@@ -2,7 +2,14 @@ const { Menu, Tray, nativeImage } = require('electron');
 
 let tray = null;
 
-function createTray(actions) {
+function createTray(actions = {}) {
+  const {
+    onStartRecording,
+    onStopRecording,
+    onRestartEngine,
+    onSettings,
+    onQuit,
+  } = actions;
   if (tray) {
     return tray;
   }
@@ -12,13 +19,13 @@ function createTray(actions) {
   tray.setToolTip('XProFlow Voice');
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Start Recording', click: actions.onStartRecording },
-    { label: 'Stop Recording', click: actions.onStopRecording },
+    { label: 'Start Recording', click: onStartRecording },
+    { label: 'Stop Recording', click: onStopRecording },
     { type: 'separator' },
-    { label: 'Restart Engine', click: actions.onRestartEngine },
-    { label: 'Settings', click: actions.onSettings },
+    { label: 'Restart Engine', click: onRestartEngine },
+    { label: 'Settings', click: onSettings },
     { type: 'separator' },
-    { label: 'Quit', click: actions.onQuit },
+    { label: 'Quit', click: onQuit },
   ]);
 
   tray.setContextMenu(contextMenu);

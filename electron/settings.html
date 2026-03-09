@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XProFlow Voice Settings</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        color: #1e293b;
+      }
+      h1 {
+        margin-top: 0;
+        font-size: 22px;
+      }
+      .setting {
+        margin-bottom: 18px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      select,
+      input[type='checkbox'] {
+        font-size: 14px;
+      }
+      select {
+        width: 100%;
+        padding: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>XProFlow Voice Settings</h1>
+
+    <div class="setting">
+      <label for="recordMode">Recording Mode</label>
+      <select id="recordMode">
+        <option value="toggle">Toggle</option>
+        <option value="hold">Hold</option>
+      </select>
+    </div>
+
+    <div class="setting">
+      <label for="clipboardBehavior">Clipboard Behaviour</label>
+      <select id="clipboardBehavior">
+        <option value="paste">Paste automatically</option>
+        <option value="copy">Copy to clipboard only</option>
+      </select>
+    </div>
+
+    <div class="setting">
+      <label>
+        <input id="showIndicator" type="checkbox" />
+        Show recording indicator
+      </label>
+    </div>
+
+    <div class="setting">
+      <label for="silenceAutoStop">Silence Auto Stop</label>
+      <select id="silenceAutoStop">
+        <option value="disabled">Disabled</option>
+        <option value="2">2 seconds</option>
+        <option value="3">3 seconds</option>
+      </select>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      const controls = {
+        recordMode: document.getElementById('recordMode'),
+        clipboardBehavior: document.getElementById('clipboardBehavior'),
+        showIndicator: document.getElementById('showIndicator'),
+        silenceAutoStop: document.getElementById('silenceAutoStop'),
+      };
+
+      function toFormValues(settings) {
+        return {
+          recordMode: settings.recordMode || 'toggle',
+          clipboardBehavior: settings.autoPaste ? 'paste' : 'copy',
+          showIndicator: Boolean(settings.showIndicator),
+          silenceAutoStop: settings.silenceAutoStop === false ? 'disabled' : String(settings.silenceAutoStop),
+        };
+      }
+
+      function toSettingsPayload() {
+        return {
+          recordMode: controls.recordMode.value,
+          autoPaste: controls.clipboardBehavior.value === 'paste',
+          showIndicator: controls.showIndicator.checked,
+          silenceAutoStop: controls.silenceAutoStop.value === 'disabled' ? false : Number(controls.silenceAutoStop.value),
+        };
+      }
+
+      function applyValues(values) {
+        controls.recordMode.value = values.recordMode;
+        controls.clipboardBehavior.value = values.clipboardBehavior;
+        controls.showIndicator.checked = values.showIndicator;
+        controls.silenceAutoStop.value = values.silenceAutoStop;
+      }
+
+      async function save() {
+        await ipcRenderer.invoke('settings:save', toSettingsPayload());
+      }
+
+      async function init() {
+        const settings = await ipcRenderer.invoke('settings:get');
+        applyValues(toFormValues(settings));
+
+        Object.values(controls).forEach((control) => {
+          const eventName = control.type === 'checkbox' ? 'change' : 'input';
+          control.addEventListener(eventName, save);
+        });
+      }
+
+      init();
+    </script>
+  </body>
+</html>
