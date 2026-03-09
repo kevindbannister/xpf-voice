@@ -5,3 +5,11 @@ export const spacing = {
   lg: "24px",
   xl: "32px",
 };
+
+export const radius = {
+  md: "12px",
+};
+
+export const shadows = {
+  soft: "0 8px 24px rgba(0,0,0,0.06)",
+};
