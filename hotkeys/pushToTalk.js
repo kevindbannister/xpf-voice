@@ -13,13 +13,11 @@ function registerPushToTalk() {
       if (!isRecording) {
         startRecording();
         isRecording = true;
-        logger('Recording started');
         return;
       }
 
       stopRecording();
       isRecording = false;
-      logger('Recording stopped');
     });
 
     if (!registered) {
