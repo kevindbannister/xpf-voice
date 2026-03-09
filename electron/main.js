@@ -3,6 +3,7 @@ const recorder = require('../audio/recorder');
 const { registerPushToTalk } = require('../hotkeys/pushToTalk');
 const { createIndicatorWindow } = require('./indicator');
 const { createTray } = require('./menuBar');
+const { createSettingsWindow } = require('./settingsWindow');
 const { getSettings } = require('../config/settings');
 const { logger } = require('../utils/logger');
 
@@ -45,7 +46,7 @@ app.whenReady().then(() => {
     onStartRecording: () => recorder.startRecording(),
     onStopRecording: () => recorder.stopRecording(),
     onRestartEngine: () => restartEngine(),
-    onSettings: () => logger('Settings clicked (placeholder)'),
+    onSettings: () => createSettingsWindow(),
     onQuit: () => app.quit(),
   });
 
