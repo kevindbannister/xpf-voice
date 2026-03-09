@@ -5,15 +5,16 @@ const { getSettings } = require('../config/settings');
 const { logger } = require('../utils/logger');
 
 const LOCAL_WEBHOOK = 'https://n8n.xproflow.com/webhook/voice-local';
+const CLOUD_WEBHOOK = 'https://n8n.xproflow.com/webhook/voice-cleanup-only-voice';
 
 function getWebhookUrl() {
   const settings = getSettings();
 
   if (settings.transcriptionMode === 'local') {
-    return 'https://n8n.xproflow.com/webhook-test/voice-local';
+    return LOCAL_WEBHOOK;
   }
 
-  return 'https://n8n.xproflow.com/webhook/voice-cleanup-only-voice';
+  return CLOUD_WEBHOOK;
 }
 
 async function sendVoice(filePath, selectedText = '') {
