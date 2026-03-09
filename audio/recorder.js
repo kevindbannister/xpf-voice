@@ -2,6 +2,8 @@ const fs = require('fs');
 const record = require('node-record-lpcm16');
 const { logger } = require('../utils/logger');
 const { showIndicator, hideIndicator } = require('../electron/indicator');
+const { sendVoice } = require('../api/client');
+const { pasteText } = require('../utils/paste');
 
 const OUTPUT_FILE = '/tmp/xproflow-voice.wav';
 
@@ -30,24 +32,38 @@ function startRecording() {
 function stopRecording() {
   if (!recordingProcess) {
     logger('Recording is not in progress');
+    hideIndicator();
     return;
   }
 
   recordingProcess.stop();
   recordingProcess = null;
-  hideIndicator();
+
+  const finalizeRecording = async () => {
+    try {
+      logger('Recording stopped');
+      logger(`Recording saved: ${OUTPUT_FILE}`);
+      logger('Uploading audio to API');
+      const text = await sendVoice(OUTPUT_FILE);
+      logger('API response received');
+      await pasteText(text);
+      logger('Text pasted into active app');
+    } catch (error) {
+      logger(`Error while processing recording: ${error instanceof Error ? error.message : String(error)}`);
+    } finally {
+      hideIndicator();
+    }
+  };
 
   if (outputStream) {
     outputStream.end(() => {
-      logger('Recording stopped');
-      logger(`Recording saved: ${OUTPUT_FILE}`);
+      finalizeRecording();
     });
     outputStream = null;
     return;
   }
 
-  logger('Recording stopped');
-  logger(`Recording saved: ${OUTPUT_FILE}`);
+  finalizeRecording();
 }
 
 module.exports = {
