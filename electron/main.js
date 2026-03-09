@@ -4,6 +4,7 @@ const { registerPushToTalk } = require('../hotkeys/pushToTalk');
 const { createIndicatorWindow } = require('../modules/voice/indicator');
 const { createTray } = require('./menuBar');
 const { createSettingsWindow } = require('./settingsWindow');
+const { createMainWindow } = require('./windows/mainWindow');
 const { logger } = require('../utils/logger');
 
 let mainWindow;
@@ -40,6 +41,12 @@ app.whenReady().then(() => {
   createIndicatorWindow();
   registerPushToTalk();
 
+  globalShortcut.register('Control+Alt+Command+1', () => {
+    logger('Opening main UI');
+    createMainWindow();
+  });
+  logger('Global shortcut registered');
+
   const isDevelopment = process.env.NODE_ENV === 'development';
   if (isDevelopment) {
     logger('Development mode detected, opening settings window');
@@ -50,6 +57,7 @@ app.whenReady().then(() => {
     onStartRecording: () => voiceController.start(),
     onStopRecording: () => voiceController.stop(),
     onRestartEngine: () => restartEngine(),
+    onOpenXProFlow: () => createMainWindow(),
     onSettings: () => createSettingsWindow(),
     onQuit: () => app.quit(),
   });

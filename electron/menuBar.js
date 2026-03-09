@@ -39,6 +39,7 @@ function createTray(actions = {}) {
     onStartRecording,
     onStopRecording,
     onRestartEngine,
+    onOpenXProFlow,
     onSettings,
     onQuit,
   } = actions;
@@ -55,6 +56,7 @@ function createTray(actions = {}) {
     { label: 'Stop Recording', click: onStopRecording },
     { type: 'separator' },
     { label: 'Restart Engine', click: onRestartEngine },
+    { label: 'Open XProFlow', click: onOpenXProFlow },
     { label: 'Settings', click: onSettings },
     { type: 'separator' },
     { label: 'Quit', click: onQuit },
