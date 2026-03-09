@@ -4,6 +4,8 @@ const FormData = require('form-data');
 const { getSettings } = require('../config/settings');
 const { logger } = require('../utils/logger');
 
+const LOCAL_WEBHOOK = 'https://n8n.xproflow.com/webhook/voice-local';
+
 function getWebhookUrl() {
   const settings = getSettings();
 
@@ -39,14 +41,14 @@ async function sendVoice(filePath, selectedText = '') {
 }
 
 async function sendLocalTranscript(text, selectedText = '') {
-  const response = await axios.post(
-    'https://n8n.xproflow.com/webhook-test/voice-local',
-    {
-      text,
-      selectedText: selectedText || '',
-      source: 'desktop-local',
-    },
-  );
+  console.log('[XPROFLOW VOICE] Sending transcript to backend');
+  console.log('[XPROFLOW VOICE] Webhook URL:', LOCAL_WEBHOOK);
+
+  const response = await axios.post(LOCAL_WEBHOOK, {
+    text,
+    selectedText,
+    source: 'desktop-local',
+  });
 
   return response.data;
 }
