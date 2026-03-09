@@ -23,13 +23,14 @@ function createMainWindow() {
 
   logger('Main UI opened');
 
-  const rendererUrl = process.env.VITE_DEV_SERVER_URL;
-  if (rendererUrl) {
-    console.log(`[XPROFLOW VOICE] Loading renderer from Vite dev server: ${rendererUrl}`);
-    mainWindow.loadURL(rendererUrl);
+  const isDev = process.env.NODE_ENV !== 'production';
+
+  if (isDev) {
+    console.log('[XPROFLOW VOICE] Loading Vite dev server');
+    mainWindow.loadURL('http://localhost:5173');
   } else {
-    console.log('[XPROFLOW VOICE] Loading renderer from bundled local index.html');
-    mainWindow.loadFile(path.join(__dirname, '../../index.html'));
+    console.log('[XPROFLOW VOICE] Loading production build');
+    mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
   }
 
   mainWindow.on('closed', () => {
