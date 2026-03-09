@@ -21,8 +21,15 @@ function createMainWindow() {
   });
 
   logger('Main UI opened');
-  console.log('[XPROFLOW VOICE] Loading renderer from root index.html');
-  mainWindow.loadFile(path.join(__dirname, '../../index.html'));
+
+  const rendererUrl = process.env.VITE_DEV_SERVER_URL;
+  if (rendererUrl) {
+    console.log(`[XPROFLOW VOICE] Loading renderer from Vite dev server: ${rendererUrl}`);
+    mainWindow.loadURL(rendererUrl);
+  } else {
+    console.log('[XPROFLOW VOICE] Loading renderer from bundled local index.html');
+    mainWindow.loadFile(path.join(__dirname, '../../index.html'));
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null;

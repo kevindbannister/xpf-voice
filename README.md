@@ -11,6 +11,8 @@ The app currently:
 - registers the global push-to-talk hotkey (`Control+Space`)
 - logs start/stop voice events to the console
 
+- the dashboard window currently loads the repository root `index.html` file directly (changes in `src/` are not wired into Electron yet)
+
 ## Install dependencies
 
 ```bash
