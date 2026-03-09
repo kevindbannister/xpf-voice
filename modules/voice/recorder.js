@@ -10,6 +10,11 @@ const OUTPUT_FILE = '/tmp/xproflow-voice.wav';
 
 let recordingProcess = null;
 let outputStream = null;
+let currentSelectionText = '';
+
+function setSelectedText(selectedText) {
+  currentSelectionText = selectedText || '';
+}
 
 function startRecording() {
   if (recordingProcess) {
@@ -44,14 +49,17 @@ function stopRecording() {
     try {
       logger('Recording stopped');
       logger(`Recording saved: ${OUTPUT_FILE}`);
-      const text = await sendVoice(OUTPUT_FILE);
+      logger('Sending selected text with voice request');
+      const text = await sendVoice(OUTPUT_FILE, currentSelectionText);
       const settings = getSettings();
       await pasteText(text, { autoPaste: Boolean(settings.autoPaste) });
       logger(settings.autoPaste ? 'Text pasted into active app' : 'Clipboard updated without auto-paste');
       voiceState.setState('idle');
+      currentSelectionText = '';
     } catch (error) {
       logger(`Error while processing recording: ${error instanceof Error ? error.message : String(error)}`);
       voiceState.setState('idle');
+      currentSelectionText = '';
     }
   };
 
@@ -69,4 +77,5 @@ function stopRecording() {
 module.exports = {
   startRecording,
   stopRecording,
+  setSelectedText,
 };
