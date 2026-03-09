@@ -1,5 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Main from "./pages/Main";
+import Dashboard from "./components/layout/Dashboard";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<Main />);
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <Dashboard />
+  </React.StrictMode>
+);

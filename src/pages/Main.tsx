@@ -1,6 +1,6 @@
 import React from "react";
-import MainLayout from "../components/layout/MainLayout";
+import Dashboard from "../components/layout/Dashboard";
 
 export default function Main() {
-  return <MainLayout />;
+  return <Dashboard />;
 }

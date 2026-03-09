@@ -1,30 +1,12 @@
-import React, { useState } from "react";
-import DictionarySettings from "../components/settings/DictionarySettings";
-import SnippetSettings from "../components/settings/SnippetSettings";
-import HistorySettings from "../components/settings/HistorySettings";
+import React from "react";
+import TopBar from "../components/layout/TopBar";
+import Card from "../components/layout/Card";
 
-function VoiceSettings() {
-  return <div>Voice settings</div>;
-}
-
-export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState("voice");
-
+export default function Settings() {
   return (
     <div>
-      <h2>Settings</h2>
-
-      <div className="settings-tabs">
-        <button onClick={() => setActiveTab("voice")}>Voice</button>
-        <button onClick={() => setActiveTab("dictionary")}>Dictionary</button>
-        <button onClick={() => setActiveTab("snippets")}>Snippets</button>
-        <button onClick={() => setActiveTab("history")}>History</button>
-      </div>
-
-      {activeTab === "voice" && <VoiceSettings />}
-      {activeTab === "dictionary" && <DictionarySettings />}
-      {activeTab === "snippets" && <SnippetSettings />}
-      {activeTab === "history" && <HistorySettings />}
+      <TopBar title="Settings" subtitle="Adjust global preferences for XProFlow Voice." />
+      <Card>Settings panel placeholder.</Card>
     </div>
   );
 }
