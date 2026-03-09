@@ -21,7 +21,8 @@ function createMainWindow() {
   });
 
   logger('Main UI opened');
-  mainWindow.loadFile(path.join(__dirname, '../../index.html'));
+  console.log('[XPROFLOW VOICE] Loading renderer UI');
+  mainWindow.loadFile(path.join(__dirname, '../../public/index.html'));
 
   mainWindow.on('closed', () => {
     mainWindow = null;
