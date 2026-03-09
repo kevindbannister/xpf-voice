@@ -1,6 +1,38 @@
 const { Menu, Tray, nativeImage } = require('electron');
+const voiceState = require('../core/voiceState');
 
 let tray = null;
+let isVoiceStateHooked = false;
+
+function setTrayStateTitle(state) {
+  if (!tray) {
+    return;
+  }
+
+  if (state === 'recording') {
+    tray.setTitle('🎙 Recording');
+    return;
+  }
+
+  if (state === 'processing') {
+    tray.setTitle('⚙ Processing');
+    return;
+  }
+
+  tray.setTitle('🎙 XProFlow');
+}
+
+function hookVoiceState() {
+  if (isVoiceStateHooked) {
+    return;
+  }
+
+  voiceState.on('change', (state) => {
+    setTrayStateTitle(state);
+  });
+
+  isVoiceStateHooked = true;
+}
 
 function createTray(actions = {}) {
   const {
@@ -15,7 +47,7 @@ function createTray(actions = {}) {
   }
 
   tray = new Tray(nativeImage.createEmpty());
-  tray.setTitle('🎙 XProFlow');
+  setTrayStateTitle(voiceState.getState());
   tray.setToolTip('XProFlow Voice');
 
   const contextMenu = Menu.buildFromTemplate([
@@ -29,6 +61,7 @@ function createTray(actions = {}) {
   ]);
 
   tray.setContextMenu(contextMenu);
+  hookVoiceState();
   return tray;
 }
 

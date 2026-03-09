@@ -1,9 +1,10 @@
 const fs = require('fs');
 const record = require('node-record-lpcm16');
 const { logger } = require('../utils/logger');
-const { showIndicator, hideIndicator, setIndicatorState } = require('../electron/indicator');
 const { sendVoice } = require('../api/client');
 const { pasteText } = require('../utils/paste');
+const { getSettings } = require('../config/settings');
+const voiceState = require('../core/voiceState');
 
 const OUTPUT_FILE = '/tmp/xproflow-voice.wav';
 
@@ -25,8 +26,7 @@ function startRecording() {
   });
 
   recordingProcess.stream().pipe(outputStream);
-  showIndicator();
-  setIndicatorState('recording');
+  voiceState.setState('recording');
   logger('Recording started');
 }
 
@@ -38,22 +38,20 @@ function stopRecording() {
 
   recordingProcess.stop();
   recordingProcess = null;
+  voiceState.setState('processing');
 
   const finalizeRecording = async () => {
     try {
       logger('Recording stopped');
       logger(`Recording saved: ${OUTPUT_FILE}`);
-      setIndicatorState('processing');
       const text = await sendVoice(OUTPUT_FILE);
-      await pasteText(text);
-      logger('Text pasted into active app');
-      setIndicatorState('done');
-      setTimeout(() => {
-        hideIndicator();
-      }, 800);
+      const settings = getSettings();
+      await pasteText(text, { autoPaste: Boolean(settings.autoPaste) });
+      logger(settings.autoPaste ? 'Text pasted into active app' : 'Clipboard updated without auto-paste');
+      voiceState.setState('idle');
     } catch (error) {
       logger(`Error while processing recording: ${error instanceof Error ? error.message : String(error)}`);
-      hideIndicator();
+      voiceState.setState('idle');
     }
   };
 
