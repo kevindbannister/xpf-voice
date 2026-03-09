@@ -1,7 +1,7 @@
 const fs = require('fs');
 const record = require('node-record-lpcm16');
 const { logger } = require('../utils/logger');
-const { showIndicator, hideIndicator } = require('../electron/indicator');
+const { showIndicator, hideIndicator, setIndicatorState } = require('../electron/indicator');
 const { sendVoice } = require('../api/client');
 const { pasteText } = require('../utils/paste');
 
@@ -26,6 +26,7 @@ function startRecording() {
 
   recordingProcess.stream().pipe(outputStream);
   showIndicator();
+  setIndicatorState('recording');
   logger('Recording started');
 }
 
@@ -43,14 +44,18 @@ function stopRecording() {
     try {
       logger('Recording stopped');
       logger(`Recording saved: ${OUTPUT_FILE}`);
+      setIndicatorState('processing');
       logger('Uploading audio to API');
       const text = await sendVoice(OUTPUT_FILE);
       logger('API response received');
       await pasteText(text);
       logger('Text pasted into active app');
+      setIndicatorState('done');
+      setTimeout(() => {
+        hideIndicator();
+      }, 700);
     } catch (error) {
       logger(`Error while processing recording: ${error instanceof Error ? error.message : String(error)}`);
-    } finally {
       hideIndicator();
     }
   };
