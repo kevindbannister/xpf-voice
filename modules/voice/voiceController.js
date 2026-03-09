@@ -1,3 +1,4 @@
+const fs = require('fs');
 const recorder = require('./recorder');
 const voiceState = require('./voiceState');
 const { createIndicatorWindow } = require('./indicator');
@@ -11,7 +12,17 @@ let currentSelectionText = '';
 async function start() {
   createIndicatorWindow();
 
-  recorder.setTranscribeHandler(transcriptionController.transcribe);
+  recorder.setTranscribeHandler(async (audioFile, selectedText) => {
+    const stats = fs.statSync(audioFile);
+    const maxBytes = 10 * 1024 * 1024;
+
+    if (stats.size > maxBytes) {
+      logger('Recording too large, aborting transcription');
+      return '';
+    }
+
+    return transcriptionController.transcribe(audioFile, selectedText);
+  });
 
   try {
     const capturedText = await captureSelectedText();
