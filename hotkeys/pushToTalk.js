@@ -11,7 +11,9 @@ function registerPushToTalk() {
       logger('Push-to-talk activated');
 
       if (!isRecording) {
-        voiceController.start();
+        Promise.resolve(voiceController.start()).catch((error) => {
+          logger(`Error starting voice capture: ${error instanceof Error ? error.message : String(error)}`);
+        });
         isRecording = true;
         return;
       }

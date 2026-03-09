@@ -3,10 +3,12 @@ const axios = require('axios');
 const FormData = require('form-data');
 const { logger } = require('../utils/logger');
 
-async function sendVoice(filePath) {
+async function sendVoice(filePath, selectedText = '') {
   try {
     const form = new FormData();
     form.append('file', fs.createReadStream(filePath));
+    form.append('selectedText', selectedText || '');
+    form.append('source', 'desktop');
 
     logger('Uploading audio to n8n');
 
